@@ -1,7 +1,4 @@
-use std::{
-    fs::{read_to_string, File},
-    path::Path,
-};
+use std::{fs::read_to_string, path::Path};
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use colored::Colorize;

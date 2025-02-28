@@ -1,8 +1,4 @@
-use std::{
-    fs::{remove_file, File},
-    io::stdin,
-    path::Path,
-};
+use std::{fs::remove_file, io::stdin, path::Path};
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use colored::Colorize;

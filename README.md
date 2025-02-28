@@ -9,6 +9,7 @@ Tbox is an all-in-one **command-line interface** (CLI) tool that helps you with 
     1.1. [Create](#create-a-file)  
     1.2. [Read](#read-a-file)  
     1.3  [Delete](#delete-a-file)  
+    1.4. [Write](#write-a-file)
 
 ## File management
 
@@ -78,4 +79,30 @@ tbox file delete file.txt
 - Delete a file in another directory without confiemation:
 ```sh
 tbox file delete ../file.txt -f
+```
+
+### Write a file
+Write content to a file with the option to overwrite or append content. It also supports skipping confirmation prompts and specifying a line number for insertion.
+
+#### Usage
+```sh
+tbox file write <pathname> <content> [options]
+```
+
+#### Options
+- `-a, --append`: Append content to the file instead of overwriting it
+- `-f, --force`: Skip confirmation prompts and force the write operation
+
+#### Examples
+- Overwrite the content of a file:
+```sh
+tbox file write file.txt "This is the new content"
+```
+- Append content to the file:
+```sh
+tbox file write file.txt "This is appended content" -a
+```
+- Force write without confirmation
+```sh
+tbox file write file.txt "This is the new content" -f
 ```
