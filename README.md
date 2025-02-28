@@ -5,10 +5,10 @@ Tbox is an all-in-one **command-line interface** (CLI) tool that helps you with 
 
 ## Table of contents
 
-1. [File management](#file-management)
-    1.1. [Create](#create-a-file)
-    1.2. [Read](#read-a-file)
-    1.3  [Delete](#delete-a-file)
+1. [File management](#file-management)  
+    1.1. [Create](#create-a-file)  
+    1.2. [Read](#read-a-file)  
+    1.3  [Delete](#delete-a-file)  
 
 ## File management
 
