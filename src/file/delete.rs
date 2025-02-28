@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-use clap::{Arg, ArgMatches, Command};
+use clap::{Arg, ArgAction, ArgMatches, Command};
 use colored::Colorize;
 
 pub fn delete_file_command() -> Command {
@@ -15,6 +15,13 @@ pub fn delete_file_command() -> Command {
                 .required(true)
                 .index(1)
                 .help("The path of the file to delete"),
+        )
+        .arg(
+            Arg::new("force")
+                .short('f')
+                .long("force")
+                .action(ArgAction::SetTrue)
+                .help("Force deletion without confirmation"),
         )
 }
 
@@ -29,20 +36,26 @@ pub fn delete_file(matches: &ArgMatches) {
         return;
     }
 
-    // Get che confirmation from the user
-    let mut confirm = String::new();
-    println!("Are you sure you want to delete {}? (y/n)", pathname);
-    stdin()
-        .read_line(&mut confirm)
-        .expect("Failed to read input");
+    // Get the flags
+    let force = matches.get_flag("force");
 
-    if confirm.trim().to_lowercase() == "y" {
-        // Delete the file
-        match remove_file(pathname) {
-            Ok(_) => println!("{}", "File deleted successfully.".green()),
-            Err(e) => println!("Error deleting file: {}", e.to_string().red()),
+    // Delete the file with confirmation
+    if !force {
+        println!(
+            "{}",
+            "Are you sure you want to delete this file? (y/n)".yellow()
+        );
+        let mut input = String::new();
+        stdin().read_line(&mut input).unwrap();
+        if input.trim().to_lowercase() != "y" {
+            println!("{}", "Deletion canceled.".red());
+            return;
         }
-    } else {
-        println!("{}", "File deletion canceled.".blue());
+    }
+
+    // Delete the file
+    match remove_file(pathname) {
+        Ok(_) => println!("{}", "File deleted successfully.".green()),
+        Err(e) => println!("{}", format!("Error deleting file: {}", e).red()),
     }
 }
