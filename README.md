@@ -10,6 +10,8 @@ Tbox is an all-in-one **command-line interface** (CLI) tool that helps you with 
     1.2. [Read](#read-a-file)  
     1.3  [Delete](#delete-a-file)  
     1.4. [Write](#write-a-file)
+2. [Folder Management](#folder-management)  
+    2.1. [Create](#create-a-folder)  
 
 ## File management
 
@@ -105,4 +107,24 @@ tbox file write file.txt "This is appended content" -a
 - Force write without confirmation
 ```sh
 tbox file write file.txt "This is the new content" -f
+```
+
+## Folder management
+
+### Create a folder
+Create a new folder in the specified pathname.
+
+#### Usage
+```sh
+tbox folder create <pathname>
+```
+
+#### Examples
+- Create a folder in the current directory:
+```sh
+tbox foler create myFolder
+```
+- Create a folder in another directory:
+```sh
+tbox folder create ./Desktop/myFolder
 ```
