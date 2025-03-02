@@ -12,6 +12,7 @@ Tbox is an all-in-one **command-line interface** (CLI) tool that helps you with 
     1.4. [Write](#write-a-file)
 2. [Folder Management](#folder-management)  
     2.1. [Create](#create-a-folder)  
+    2.2 [Delete](#delete-a-folder)  
 
 ## File management
 
@@ -78,7 +79,7 @@ tbox file delete <pathaname> [options]
 ```sh
 tbox file delete file.txt
 ```
-- Delete a file in another directory without confiemation:
+- Delete a file in another directory without asking for confirmation:
 ```sh
 tbox file delete ../file.txt -f
 ```
@@ -122,9 +123,35 @@ tbox folder create <pathname>
 #### Examples
 - Create a folder in the current directory:
 ```sh
-tbox foler create myFolder
+tbox folder create myFolder
 ```
 - Create a folder in another directory:
 ```sh
 tbox folder create ./Desktop/myFolder
+```
+
+### Delete a folder
+
+#### Usage
+```sh
+tbox folder delete <pathname> [options]
+```
+
+#### Options
+- `-f, --force`: Delete the folder without asking for confirmation.
+- `-a, --all`: Delete a folder and all its contents.
+
+
+#### Examples
+- Delete a folder (only if it's empty)
+```sh
+tbox folder delete myFolder
+```
+- Delete a folder and all its contents (with confirmation):
+```sh
+tbox folder delete myFolder -a
+```
+- Delete a folder and all its contents without confirmation:
+```sh
+tbox folder delete myFolder -a -f
 ```
