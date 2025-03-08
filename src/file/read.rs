@@ -2,6 +2,7 @@ use std::{fs::read_to_string, path::Path};
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use colored::Colorize;
+use serde::de::value;
 
 pub fn read_file_command() -> Command {
     Command::new("read")
@@ -26,6 +27,27 @@ pub fn read_file_command() -> Command {
                 .value_name("START:END")
                 .help("Show only a range of lines (e.g., 10:20)"),
         )
+        .arg(
+            Arg::new("tail")
+                .short('t')
+                .long("tail")
+                .help("Show only the last 10 lines")
+                .action(ArgAction::SetTrue),
+        )
+        .arg(
+            Arg::new("head")
+                .short('H')
+                .long("head")
+                .help("Show only the first 10 lines")
+                .action(ArgAction::SetTrue),
+        )
+        .arg(
+            Arg::new("grep")
+                .short('g')
+                .long("grep")
+                .help("Search for a pattern in the file")
+                .value_name("PATTERN"),
+        )
 }
 
 pub fn read_file(matches: &ArgMatches) {
@@ -45,6 +67,9 @@ pub fn read_file(matches: &ArgMatches) {
             let lines: Vec<&str> = content.lines().collect();
             let total_lines = lines.len();
 
+            let head = matches.get_flag("head");
+            let tail = matches.get_flag("tail");
+
             // Check if the file is empty
             if total_lines == 0 {
                 println!("{}", "The file is empty.".yellow());
@@ -57,6 +82,11 @@ pub fn read_file(matches: &ArgMatches) {
 
             // If the user wants to show a specific range of lines
             if let Some(range) = matches.get_one::<String>("lines") {
+                if head || tail {
+                    println!("{}", "Cannot use --lines with --head or --tail.".red());
+                    return;
+                }
+
                 // Check if the range is valid
                 if !range.contains(":") {
                     println!(
@@ -117,6 +147,19 @@ pub fn read_file(matches: &ArgMatches) {
             // Flag number
             let show_number = matches.get_flag("number");
 
+            // If the user wants to show the head (first 10 lines)
+            if head {
+                end = 10;
+            };
+
+            // If the user wants to show the tail (last 10 lines)
+            if tail {
+                start = total_lines - 10;
+                end = total_lines;
+            };
+
+            let grep_pattern = matches.get_one::<String>("grep");
+
             // Print the content
             println!("{}", "File content".green());
             for (i, line) in lines
@@ -125,15 +168,32 @@ pub fn read_file(matches: &ArgMatches) {
                 .skip(start - 1)
                 .take(end - start + 1)
             {
-                if show_number {
-                    let width = total_lines.to_string().len();
-                    println!(
-                        "{}:    {}",
-                        format!("{:width$}", i + 1, width = width).blue(),
-                        line
-                    );
+                // If grep is used, filter lines that match the pattern
+                if let Some(pattern) = grep_pattern {
+                    if line.contains(pattern) {
+                        if show_number {
+                            let width = total_lines.to_string().len();
+                            println!(
+                                "{}:    {}",
+                                format!("{:width$}", i + 1, width = width).blue(),
+                                line
+                            );
+                        } else {
+                            println!("{}", line);
+                        }
+                    }
                 } else {
-                    println!("{}", line);
+                    // No grep, just print the line
+                    if show_number {
+                        let width = total_lines.to_string().len();
+                        println!(
+                            "{}:    {}",
+                            format!("{:width$}", i + 1, width = width).blue(),
+                            line
+                        );
+                    } else {
+                        println!("{}", line);
+                    }
                 }
             }
         }

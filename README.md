@@ -44,6 +44,9 @@ tbox file read <pathname> [options]
 #### Options
 - `-n, --number`: Show line numbers
 - `-l, --lines START:END`: Display only a specific line range. Supports `START:`, `:END`, or `START:END`. If start and end have the same number, it will display only a single line
+- `-t, --tail`: Display only the last 10 lines  (only works if --lines is not used)
+- `-H, --head`: Display only the first 10 lines  (only works if --lines is not used)
+- `-g, --grep`: Filters the displayed content by matching lines that contain the specified pattern. This can be used to quickly locate occurrences of a word or phrase in a large file.
 
 #### Examples
 - Read a File:
@@ -61,6 +64,18 @@ tbox file read file.txt -l 10:20
 - Show from line 5 onwards and display line numbers:
 ```sh
 tbox file read file.txt -l 5: -n
+```
+- Show the first 10 lines:
+```
+tbox file read file.txt -H
+```
+- Show the last 10 lines:
+```
+tbox file read file.txt -t
+```
+- Search for a pattern in the file and display line numbers
+```
+tbox file read file.txt -g "error" -n
 ```
 
 ### Delete a file
