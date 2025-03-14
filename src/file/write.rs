@@ -1,6 +1,6 @@
 use std::{
-    fs::OpenOptions,
-    io::{stdin, Write},
+    fs::{self, OpenOptions},
+    io::{self, stdin, Write},
     path::Path,
 };
 
@@ -54,51 +54,50 @@ pub fn write_file(matches: &ArgMatches) {
         return;
     }
 
-    // Confirm write
-    if !force {
-        let action = if append {
-            "append content to"
-        } else {
-            "overwrite the content of"
-        };
-
-        println!(
-            "{}",
-            format!(
-                "Are you sure you want to {} the file {}? (y/n)",
-                action, pathname
-            )
-            .yellow()
-        );
-
-        let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
-        if input.trim().to_lowercase() != "y" {
-            println!("{}", "Write canceled.".red());
-            return;
-        }
-    }
-
-    // Write to the file (overwrite)
-    if !append {
-        match std::fs::write(pathname, content) {
-            Ok(_) => println!("{}", "File written successfully.".green()),
-            Err(e) => println!("{}", format!("Error: {}", e).red()),
-        }
+    // Confirm acqion before writing
+    if !force && !confirm_overwrite(append, pathname) {
+        println!("{}", "Write canceled.".red());
         return;
     }
 
-    // Write to the file (append)
-    let mut file = match OpenOptions::new().append(true).open(pathname) {
-        Ok(file) => file,
-        Err(e) => {
-            println!("{}", format!("Error opening file: {}", e).red());
-            return;
-        }
-    };
-
-    match file.write_all(content.as_bytes()) {
+    // Write
+    match if append {
+        append_to_file(pathname, &content)
+    } else {
+        overwrite_file(pathname, &content)
+    } {
         Ok(_) => println!("{}", "File written successfully.".green()),
-        Err(e) => println!("{}", format!("Error: {}", e).red()),
+        Err(e) => eprintln!("{}", format!("Error: {}", e).red()),
     }
+}
+
+// Function to confirm overwrite action
+fn confirm_overwrite(append: bool, pathname: &str) -> bool {
+    let action = if append { "append to" } else { "overwrite" };
+    println!(
+        "{}",
+        format!(
+            "Are you sure you want to {} the file {}? (y/n)",
+            action, pathname
+        )
+        .yellow()
+    );
+
+    let mut input = String::new();
+    if stdin().read_line(&mut input).is_err() || input.trim().to_lowercase() != "y" {
+        false
+    } else {
+        true
+    }
+}
+
+// Function to overwrite a file
+fn overwrite_file(pathname: &str, content: &str) -> io::Result<()> {
+    fs::write(pathname, content)
+}
+
+// Function to append content to a file
+fn append_to_file(pathname: &str, content: &str) -> io::Result<()> {
+    let mut file = OpenOptions::new().append(true).open(pathname)?;
+    file.write_all(content.as_bytes())
 }

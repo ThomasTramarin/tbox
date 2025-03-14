@@ -4,15 +4,52 @@ Tbox is an all-in-one **command-line interface** (CLI) tool that helps you with 
 > Note: This project is still under development. 👨‍💻
 
 ## Table of contents
-
-1. [File management](#file-management)  
+1. [Installation](#installation)  
+2. [File management](#file-management)  
     1.1. [Create](#create-a-file)  
     1.2. [Read](#read-a-file)  
     1.3  [Delete](#delete-a-file)  
-    1.4. [Write](#write-a-file)
-2. [Folder Management](#folder-management)  
+    1.4. [Write](#write-a-file)  
+    1.5. [Clear](#clear-a-file)  
+    1.6. [Info](#get-file-info)
+3. [Folder Management](#folder-management)  
     2.1. [Create](#create-a-folder)  
     2.2 [Delete](#delete-a-folder)  
+
+## Installation
+
+### Prerequisites
+- **Rust**: Tbox is built using the Rust programming language. To run Tbox, you must have Rust installed on your system.
+
+### Installing Tbox
+Once you have Rust installed, you can easily build and install Tbox globally to make it available anywhere in your terminal.
+
+#### 1. Clone the repository
+First, clone the Tbox repository from GitHub
+```sh
+git clone https://github.com/ThomasTramarin/tbox.git
+```
+
+#### 2. Build the project
+Navigate to the directory where the Tbox project is located:
+```sh
+cd tbox
+```
+Now, use Cargo (Rust's package manager and build system) to build the project:
+```sh
+cargo build --release
+```
+This will compile the project in release mode. The compiled binary will be in the `target/release` folder.
+
+#### 3. Install Tbox Globally
+To make Tbox available globally (so you can run it from anywhere on your terminal), you need to move the compiled binary to a directory included in your system's `PATH`
+
+#### 4. Check if Tbox is successfully installed
+```sh
+tbox --version
+```
+This should return the current version of Tbox, confirming that the installation was successful.
+
 
 ## File management
 
@@ -124,6 +161,46 @@ tbox file write file.txt "This is appended content" -a
 ```sh
 tbox file write file.txt "This is the new content" -f
 ```
+
+### Clear a file
+
+Clear the content of a file, essentially emptying it. The file itself remains, but all its content is deleted.
+
+#### Usage 
+
+```sh
+tbox file clear <pathanme> [options]
+```
+
+#### Options
+
+- `-f, --force`: Force clear the file without asking for confirmation. If this flag is not provided, the user will be prompted to confirm the action before proceeding.
+
+#### Examples
+
+- Clear the content of a file (with confirmation):
+```sh
+tbox file clear file.txt
+```
+- Clear the content of a file (without confirmation)
+```sh
+tbox file clear file.txt -f
+```
+
+### Get file info
+Shows detailed information about a file. This command provides data such as file size, permissions, creation and modification dates, and other useful information.
+#### Usage
+```sh
+tbox file info <pathanme>
+```
+
+#### Examples
+- Get information about a file:
+```sh
+tbox file info file.txt
+```
+
+
 
 ## Folder management
 

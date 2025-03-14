@@ -1,7 +1,4 @@
-use std::{
-    fs::{create_dir, File},
-    path::Path,
-};
+use std::{fs::create_dir, path::Path};
 
 use clap::{Arg, ArgMatches, Command};
 use colored::Colorize;

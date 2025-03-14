@@ -2,7 +2,6 @@ use std::{fs::read_to_string, path::Path};
 
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use colored::Colorize;
-use serde::de::value;
 
 pub fn read_file_command() -> Command {
     Command::new("read")

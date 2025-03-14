@@ -8,7 +8,7 @@ mod folder;
 mod utils;
 
 fn main() {
-    let matches = Command::new("tbox")
+    let matches = Command::new("tbox").version("1.0.0")
         .about("A simple and powerful CLI tool that bundles multiple useful commands into a single executable, making everyday tasks faster and more efficient.")
         .after_help("The last cli tool you will ever need.")
         .subcommand(file_commands())
